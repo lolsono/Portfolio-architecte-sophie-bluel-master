@@ -6,18 +6,15 @@ async function fetchWorks() {
     // Retourne le tableau des œuvres récupérées
     return works; 
 }
-
-fetchWorks();
   
 //fetch cathégorie
 async function fetchCategories() {
     const reponseCategories = await fetch("http://localhost:5678/api/categories");
     const categories = await reponseCategories.json();
     console.log(categories);
+    return categories;
 }
   
-fetchCategories();
-
 //gerer la partie affichage de works
 const galleryContainner = document.querySelector(".gallery");
 console.log(galleryContainner);
@@ -54,4 +51,25 @@ function createImage(url, alt) {
     return image;
 }
 
-//fonction pour la figcaption
+
+fetchCategories().then (categories => {
+    const filtreContainner = document.querySelector(".filtre");
+    
+    for (let i=0; i < categories.length; i++) {
+        const createInput = document.createElement("input");
+        createInput.type = "submit";
+
+        //doit changer celon name
+        createInput.value = categories[i].name;
+
+        filtreContainner.appendChild(createInput)
+    }
+   
+});
+
+
+
+
+
+
+
