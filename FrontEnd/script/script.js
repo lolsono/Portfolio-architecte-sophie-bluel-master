@@ -49,6 +49,7 @@ function createImage(url, alt) {
 
 //partie filtre
 
+//creation des inputs filtre
 function createFiltre () {
     fetchCategories().then (categories => {
         const filtreContainner = document.querySelector(".filtre");
@@ -96,15 +97,19 @@ function eventListenerFiltre () {
                     if (categorieId === "Tous") {
                         filterName = works;
                         displayArray(filterName);
+                        console.log(filterName);
                     }else {
                         const filterName = works.filter(item => item.category.name === categorieId);                        
                         displayArray(filterName);
+                        console.log(filterName);
                     };
                 });
             });
         });
     });
 };
+
+//fonction pour afficher la nouvelle page 
 
 function displayArray (tableau) {
     const galleryContainner = document.querySelector(".gallery");
@@ -124,7 +129,7 @@ function displayArray (tableau) {
         // Ajouter la figcaption à la figure
         figureContainner.appendChild(titleFigcaption);
     }
-}
+};
 
 
 

@@ -98,6 +98,16 @@ nav li {
 li:hover {
 	color: #B1663C;
 }
+
+/*li avec lien dedant*/
+li a {
+	text-decoration: none;
+    color: black;
+	&:hover {
+		color: #B1663C;
+	}
+}
+
 #introduction {
 	display: flex;
 	align-items: center;
@@ -189,6 +199,13 @@ margin: auto;
 	margin-top:30px;
 	display: flex;
 	flex-direction: column;
+}
+
+#contact form a {
+	margin: 2em auto;
+    font-size: 14px;
+    font-weight: 500;
+    color: #3D3D3D;
 }
 
 #contact input {
