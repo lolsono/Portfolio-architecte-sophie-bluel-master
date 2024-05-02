@@ -14,13 +14,8 @@ async function fetchCategories() {
     console.log(categories);
     return categories;
 }
-  
-//gerer la partie affichage de works
-const galleryContainner = document.querySelector(".gallery");
-console.log(galleryContainner);
 
-
-// Appeler fetchWorks() et traiter le tableau retourné
+//affichage de basses
 fetchWorks().then(works => {
     const galleryContainner = document.querySelector(".gallery");
     console.log(galleryContainner);
@@ -42,6 +37,7 @@ fetchWorks().then(works => {
         figureContainner.appendChild(titleFigcaption);
     }
 });
+  
 
 // Fonction pour créer une image avec une source donnée
 function createImage(url, alt) {
@@ -51,22 +47,89 @@ function createImage(url, alt) {
     return image;
 }
 
+//partie filtre
 
-fetchCategories().then (categories => {
-    const filtreContainner = document.querySelector(".filtre");
+function createFiltre () {
+    fetchCategories().then (categories => {
+        const filtreContainner = document.querySelector(".filtre");
+        
+        for (let i=0; i < categories.length; i++) {
+            const createInput = document.createElement("input");
+            createInput.type = "submit";
     
-    for (let i=0; i < categories.length; i++) {
-        const createInput = document.createElement("input");
-        createInput.type = "submit";
+            //doit changer celon name
+            createInput.value = categories[i].name;
+    
+            filtreContainner.appendChild(createInput)
+    
+        }
+       
+    });
+}
 
-        //doit changer celon name
-        createInput.value = categories[i].name;
+//système d event listenner personaliser
 
-        filtreContainner.appendChild(createInput)
+function eventListenerFiltre () {
+    fetchCategories().then (categories => {
+        const boutonsFiltre = document.querySelectorAll('.filtre input[type="submit"]');
+        console.log(boutonsFiltre);
+
+        boutonsFiltre.forEach(bouton => {
+
+            bouton.addEventListener('click', function() {
+                const galleryContainner = document.querySelector(".gallery");
+                //on supprime l ancienne page
+                galleryContainner.innerHTML = '';
+
+                boutonsFiltre.forEach(b => {
+                    b.classList.remove('selected');
+                });
+
+                const categorieId = this.value;
+                this.classList.add('selected');
+                console.log(categorieId);
+
+                fetchWorks().then(works => {
+                    // Effectuer des actions après avoir récupéré les œuvres
+
+                    //petite condition si ces tous 
+                    if (categorieId === "Tous") {
+                        filterName = works;
+                        displayArray(filterName);
+                    }else {
+                        const filterName = works.filter(item => item.category.name === categorieId);                        
+                        displayArray(filterName);
+                    };
+                });
+            });
+        });
+    });
+};
+
+function displayArray (tableau) {
+    const galleryContainner = document.querySelector(".gallery");
+    // Faire une boucle pour créer les figures avec les images
+    for (let i = 0; i < tableau.length; i++) {
+        // Créer un élément figure pour chaque œuvre
+        const figureContainner = document.createElement("figure");
+        galleryContainner.appendChild(figureContainner);
+
+        // Créer et ajouter une image dans la figure
+        const image = createImage(tableau[i].imageUrl, tableau[i].title);
+        figureContainner.appendChild(image);
+
+        const titleFigcaption = document.createElement("figcaption");
+        titleFigcaption.innerText = tableau[i].title;
+
+        // Ajouter la figcaption à la figure
+        figureContainner.appendChild(titleFigcaption);
     }
-   
-});
+}
 
+
+
+createFiltre();
+eventListenerFiltre();
 
 
 
