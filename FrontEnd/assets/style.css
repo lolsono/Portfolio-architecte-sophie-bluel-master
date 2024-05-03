@@ -108,6 +108,11 @@ li a {
 	}
 }
 
+.weight {
+	font-size: 16px;
+	font-weight: 600;
+}
+
 #introduction {
 	display: flex;
 	align-items: center;
@@ -203,6 +208,13 @@ margin: auto;
 
 #contact form a {
 	margin: 2em auto;
+    font-size: 14px;
+    font-weight: 500;
+    color: #3D3D3D;
+}
+
+#message {
+	margin: 0em auto;
     font-size: 14px;
     font-weight: 500;
     color: #3D3D3D;
