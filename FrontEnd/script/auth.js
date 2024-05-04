@@ -6,11 +6,11 @@ const login = document.querySelector("#loginLink");
 const messError = document.querySelector("#message");
 
 //on prend les valeur des saisie
-const email = document.querySelector("#email").value;
-const password = document.querySelector("#password").value;
-    
+
 form.addEventListener("submit", function (event) {
     
+    const email = document.querySelector("#email").value;
+    const password = document.querySelector("#password").value;
     event.preventDefault(); 
 
     var formData = {
@@ -21,6 +21,7 @@ form.addEventListener("submit", function (event) {
     // Convertir l'objet en chaîne JSON
     const formDataJson = JSON.stringify(formData);  
     sendForm(formDataJson);
+    console.log(formDataJson);
         
 });
 
@@ -33,7 +34,7 @@ async function sendForm (formDataJson) {
     })
     
     const tokenData = await reponse.json();
-    return tokenData
+    getResponse(tokenData);
 };
     
 //gestion réponse 
@@ -45,11 +46,9 @@ function getResponse (tokenData) {
         console.log(tokenData.token)
         // Stocker le token dans le stockage local
         localStorage.setItem('token', tokenData.token);
-        // Redirection vers la page principale ou toute autre action
-        //window.location.href = 'index.html';
 
-        // Modification de adminMode
-        adminMode = true;
+        // Redirection vers la page principale ou toute autre action
+        window.location.href = 'index.html';
 
     } else {
         messError.innerText = "Mauvaise identifiant ou mot de passe";
@@ -58,4 +57,3 @@ function getResponse (tokenData) {
 };
     
 
-getResponse();

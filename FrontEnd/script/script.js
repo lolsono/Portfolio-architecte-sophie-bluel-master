@@ -113,6 +113,9 @@ function displayArray (tableau) {
     }
 };
 
+
+//gestion affichage mode edit
+
 createFiltre();
 eventListenerFiltre();
 
