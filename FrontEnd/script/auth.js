@@ -33,18 +33,18 @@ async function sendForm (formDataJson) {
     })
     
     const tokenData = await reponse.json();
-    return tokenData.token
+    return tokenData
 };
     
 //gestion réponse 
 
-function getResponse (token) {
+function getResponse (tokenData) {
     //condition si bon mot de passe ou non 
-    if (token) {
+    if (tokenData.token) {
         console.log("Accès validé");
-        console.log(data)
+        console.log(tokenData.token)
         // Stocker le token dans le stockage local
-        localStorage.setItem('token', data.token);
+        localStorage.setItem('token', tokenData.token);
         // Redirection vers la page principale ou toute autre action
         //window.location.href = 'index.html';
 
@@ -53,7 +53,9 @@ function getResponse (token) {
 
     } else {
         messError.innerText = "Mauvaise identifiant ou mot de passe";
-        console.log(data)
+        console.log(tokenData)
     }   
 };
     
+
+getResponse();
