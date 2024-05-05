@@ -1,3 +1,7 @@
+const bandeaux = document.querySelector(".bandeaux");
+const logoutLink = document.querySelector("#loginLink");
+const buttonEdit = document.querySelector(".edit-actions");
+
 //fetch work
 async function fetchWorks() {
     const reponseWork = await fetch("http://localhost:5678/api/works");
@@ -113,9 +117,39 @@ function displayArray (tableau) {
     }
 };
 
+//gestion de la modale
+
 
 //gestion affichage mode edit
+function editMode () {
+    const token = localStorage.getItem('token');
+    console.log(token);
 
+    if (token) {
+        bandeaux.style.display = 'flex';
+        logoutLink.innerText = "logout";
+        logoutLink.setAttribute('href', 'index.html'); 
+        buttonEdit.style.display = 'flex';
+    
+    }else {
+        logoutLink.setAttribute('href', 'auth.html'); 
+    }
+};
+
+function logout () {
+
+    // Add an event listener to the logoutLink
+    logoutLink.addEventListener('click', (event) => {
+        if (logoutLink.innerText === "logout") {
+            localStorage.removeItem('token');
+            editMode(); 
+        }
+    });
+
+};
+
+logout();
+editMode();
 createFiltre();
 eventListenerFiltre();
 
