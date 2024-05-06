@@ -25,6 +25,7 @@ async function fetchCategories() {
 //affichage de basses
 fetchWorks().then(works => {
     displayArray(works);
+    createGalleryEdit(works);
 });
   
 
@@ -127,28 +128,35 @@ function displayArray (tableau) {
 function createGalleryEdit (tableau) {
 
     for (let i = 0; i < tableau.length; i++) {
-        // Créer un élément figure pour chaque œuvre
-        const figureContainner = document.createElement("div");
-        galleryContainner.appendChild(figureContainner);
+        // Créer un élément div
+        const cards = document.createElement("div");
+        cards.className = "gallery-card";
 
-        // Créer et ajouter une image dans la figure
-        const image = createImage(tableau[i].imageUrl, tableau[i].title);
-        figureContainner.appendChild(image);
+        // Créer et ajouter l' image dans la div
+        const img = document.createElement("img");
+        img.src = tableau[i].imageUrl;
+        img.alt = tableau[i].title;
 
-        const titleFigcaption = document.createElement("figcaption");
-        titleFigcaption.innerText = tableau[i].title;
+        // partie bouton dans la div
+        const button = document.createElement("button");
+        const icon = document.createElement("i");
+        icon.className = "fa-solid fa-trash-can";
+        button.appendChild(icon);
+      
+        cards.appendChild(img);
+        cards.appendChild(button);
 
-        // Ajouter la figcaption à la figure
-        figureContainner.appendChild(titleFigcaption);
+        // Ajouter la div cards dans galleryEdit
+        galleryEdit?.appendChild(cards);
     }
 };
 
-//bouton déclenchement
+//bouton déclenchement modal
 
 modalTrigger.forEach(trigger => trigger.addEventListener('click', toggleModal));
 
 function toggleModal () {
-    modalContainner.classList.toggle("active")
+    modalContainner.classList.toggle("active");
 };
 
 //gestion affichage mode edit
@@ -178,6 +186,7 @@ function logout () {
     });
 
 };
+
 
 logout();
 editMode();

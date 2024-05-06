@@ -198,6 +198,7 @@ li a {
 	width: 100vw;
 	height: 100vh;
 }
+
 .modale-container.active {
 	display: block;
 }
@@ -216,7 +217,9 @@ li a {
 	display: flex;
 	z-index: 4;
 	width: 55%;
+	max-width: 630px;
 	height: 85%;
+	max-height: 688px;
 	background-color: white;
 	border-radius: 10px;
 	position: absolute;
@@ -246,13 +249,49 @@ li a {
 }
 
 .close-modal {
+	background-color: transparent;
 	padding: 8px 10px;
 	border: none;
-	border-radius: 5px;
 	position: absolute;
-	top: 10px;
-	right: 10px;
+	top: 32px;
+	right: 36px;
 	cursor: pointer;
+}
+
+.close-modal i {
+	color: black;
+}
+
+/*gestion des mini card dans la modal*/
+
+.gallery-card {
+	position: relative;
+    height: 102px;
+    width: 76px;
+}
+
+.gallery-card img {
+	width: 100%;
+	height: 100%;
+}
+
+.gallery-card button {
+	border-radius: 2px;
+	display: flex;
+    left: 54px;
+    top: 5px;
+    width: 17px;
+    height: 17px;
+    position: absolute;
+    border: none;
+    background: black;
+    justify-content: center;
+    align-items: center;
+}
+
+.gallery-card button i {
+	margin: 0px;
+	font-size: 11px;
 }
 
 /*gestion parti bouton filtre*/
