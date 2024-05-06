@@ -13,6 +13,26 @@
 	<script src="script/script.js" defer></script>
 </head>
 <body>
+
+	<!-- modale -->
+	<div class="modale-container">
+
+		<!--fermeture clique en dehor de la fenêtre pp-->
+		<div class="overlay modal-trigger">
+		</div>
+
+		<!--fenetre modale "finale" -->
+		<div class="modal">
+			<button class="close-modal modal-trigger">x</button>
+			<h3>Galerie photo</h3>
+
+			<!--affichage gallery-->
+			<div class="gallery-edit"></div>
+
+			<input type="submit" value="Ajouter une photo">
+		</div>
+	</div>
+
 	<div class="bandeaux">
 		<i class="fa-regular fa-pen-to-square"></i>
 		<p>Mode édition</p>
@@ -42,13 +62,11 @@
 	</section>
 	<section id="portfolio">
 
-		
-		
 		<div class="containnerEdit">
 			<h2>Mes Projets</h2>
 			
-			<button class="edit-actions">
-				<i class="fa-regular fa-pen-to-square"></i>
+			<button class="modal-trigger edit-actions">
+				<i class="fa-regular fa-pen-to-square "></i>
 				<span>Modifier</span>
 			</button>
 		</div>

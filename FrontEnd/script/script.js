@@ -1,6 +1,9 @@
 const bandeaux = document.querySelector(".bandeaux");
 const logoutLink = document.querySelector("#loginLink");
 const buttonEdit = document.querySelector(".edit-actions");
+const modalContainner = document.querySelector(".modale-container");
+const modalTrigger = document.querySelectorAll(".modal-trigger");
+const galleryEdit = document.querySelector("gallery-edit"); 
 
 //fetch work
 async function fetchWorks() {
@@ -119,6 +122,34 @@ function displayArray (tableau) {
 
 //gestion de la modale
 
+//fonction création miniature
+
+function createGalleryEdit (tableau) {
+
+    for (let i = 0; i < tableau.length; i++) {
+        // Créer un élément figure pour chaque œuvre
+        const figureContainner = document.createElement("div");
+        galleryContainner.appendChild(figureContainner);
+
+        // Créer et ajouter une image dans la figure
+        const image = createImage(tableau[i].imageUrl, tableau[i].title);
+        figureContainner.appendChild(image);
+
+        const titleFigcaption = document.createElement("figcaption");
+        titleFigcaption.innerText = tableau[i].title;
+
+        // Ajouter la figcaption à la figure
+        figureContainner.appendChild(titleFigcaption);
+    }
+};
+
+//bouton déclenchement
+
+modalTrigger.forEach(trigger => trigger.addEventListener('click', toggleModal));
+
+function toggleModal () {
+    modalContainner.classList.toggle("active")
+};
 
 //gestion affichage mode edit
 function editMode () {
