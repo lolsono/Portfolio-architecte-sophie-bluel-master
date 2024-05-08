@@ -1,3 +1,5 @@
+const API_BASE_URL = "http://localhost:5678/api";
+
 const bandeaux = document.querySelector(".bandeaux");
 const logoutLink = document.querySelector("#loginLink");
 const buttonEdit = document.querySelector(".edit-actions");
@@ -6,28 +8,27 @@ const modalTrigger = document.querySelectorAll(".modal-trigger");
 const galleryEdit = document.querySelector("gallery-edit"); 
 
 //fetch work
-async function fetchWorks() {
-    const reponseWork = await fetch("http://localhost:5678/api/works");
-    const works = await reponseWork.json();
-    console.log(works);
-    // Retourne le tableau des œuvres récupérées
-    return works; 
+function fetchWorks() {
+    fetch(`${API_BASE_URL}/works`)
+        .then(response => response.json())
+        .then(data => {
+            displayWorks(data);
+            createGalleryEdit(data);
+        })
+        .catch(error => console.log(error));
 }
   
 //fetch cathégorie
-async function fetchCategories() {
-    const reponseCategories = await fetch("http://localhost:5678/api/categories");
-    const categories = await reponseCategories.json();
-    console.log(categories);
-    return categories;
+function fetchCategories() {
+    fetch(`${API_BASE_URL}/categories`)
+        .then(response => response.json())
+        .then(data => {
+            displayCategories(data);
+            eventListenerFiltre();
+        })
+        .catch(error => console.log(error));
 }
 
-//affichage de basses
-fetchWorks().then(works => {
-    displayArray(works);
-    createGalleryEdit(works);
-});
-  
 
 // Fonction pour créer une image avec une source donnée
 function createImage(url, alt) {
@@ -40,81 +41,74 @@ function createImage(url, alt) {
 //partie filtre
 
 //creation des inputs filtre
-function createFiltre () {
-    fetchCategories().then (categories => {
-        const filtreContainner = document.querySelector(".filtre");
-        
-        for (let i=0; i < categories.length; i++) {
-            const createInput = document.createElement("input");
-            createInput.type = "submit";
-    
-            //doit changer celon name
-            createInput.value = categories[i].name;
-    
-            filtreContainner.appendChild(createInput)
-    
-        }
-       
-    });
+function displayCategories (categories) {
+
+    const filtre = document.querySelector(".filtre");
+    for (let i=0; i < categories.length; i++) {
+        const createInput = document.createElement("input");
+        createInput.type = "submit";
+
+        //doit changer celon name
+        createInput.value = categories[i].name;
+
+        filtre.appendChild(createInput)
+
+    }   
 }
 
 //système d event listenner personaliser
 
-function eventListenerFiltre () {
-    fetchCategories().then (categories => {
-        const boutonsFiltre = document.querySelectorAll('.filtre input[type="submit"]');
-        console.log(boutonsFiltre);
+function setupEventListenerFiltre () {
+    
+    const inputFiltre = document.querySelector(".filtre")
 
-        boutonsFiltre.forEach(bouton => {
+    inputFiltre.addEventListener("click", function(event) {
 
-            bouton.addEventListener('click', function() {
-                const galleryContainner = document.querySelector(".gallery");
-                //on supprime l ancienne page
-                galleryContainner.innerHTML = '';
+        if (event.target.type === "submit") {
+          console.log(event.target.value);
 
-                boutonsFiltre.forEach(b => {
-                    b.classList.remove('selected');
-                });
-
-                const categorieId = this.value;
-                this.classList.add('selected');
-                console.log(categorieId);
-
-                fetchWorks().then(works => {
-                    // Effectuer des actions après avoir récupéré les œuvres
-
-                    //petite condition si ces tous 
-                    if (categorieId === "Tous") {
-                        filterName = works;
-                        displayArray(filterName);
-                        console.log(filterName);
-                    }else {
-                        const filterName = works.filter(item => item.category.name === categorieId);                        
-                        displayArray(filterName);
-                        console.log(filterName);
-                    };
-                });
-            });
-        });
+          //optionnel
+          const galleryContainner = document.querySelector(".gallery");
+          //on supprime l ancienne page
+          galleryContainner.innerHTML = '';
+  
+        }
     });
+
 };
+
+
+function teste (value, data) {
+    if (value === "Tous") {
+        filterName = works;
+        displayWorks(filterName);
+        console.log(filterName);
+    }else {
+        const filterName = works.filter(item => item.category.name === categorieId);                        
+        displayWorks(filterName);
+        console.log(filterName);
+    };
+};
+
+//recuperer tout les element input submit dans filtre
+//j'ecoute l
 
 //fonction pour afficher la nouvelle page 
 
-function displayArray (tableau) {
+function displayWorks (media) {
     const galleryContainner = document.querySelector(".gallery");
     // Faire une boucle pour créer les figures avec les images
-    for (let i = 0; i < tableau.length; i++) {
+    for (let i = 0; i < media.length; i++) {
         // Créer un élément figure pour chaque œuvre
         const figureContainner = document.createElement("figure");
         galleryContainner.appendChild(figureContainner);
 
         // Créer et ajouter une image dans la figure
-        const image = createImage(tableau[i].imageUrl, tableau[i].title);
+        const image = createImage(media[i].imageUrl, media[i].title);
         figureContainner.appendChild(image);
 
         const titleFigcaption = document.createElement("figcaption");
-        titleFigcaption.innerText = tableau[i].title;
+        titleFigcaption.innerText = media[i].title;
 
         // Ajouter la figcaption à la figure
         figureContainner.appendChild(titleFigcaption);
@@ -125,17 +119,17 @@ function displayArray (tableau) {
 
 //fonction création miniature
 
-function createGalleryEdit (tableau) {
+function createGalleryEdit (media) {
 
-    for (let i = 0; i < tableau.length; i++) {
+    for (let i = 0; i < media.length; i++) {
         // Créer un élément div
         const cards = document.createElement("div");
         cards.className = "gallery-card";
 
         // Créer et ajouter l' image dans la div
         const img = document.createElement("img");
-        img.src = tableau[i].imageUrl;
-        img.alt = tableau[i].title;
+        img.src = media[i].imageUrl;
+        img.alt = media[i].title;
 
         // partie bouton dans la div
         const button = document.createElement("button");
@@ -152,7 +146,7 @@ function createGalleryEdit (tableau) {
 };
 
 //bouton déclenchement modal
-
+// a changer crée des problème dans le code
 modalTrigger.forEach(trigger => trigger.addEventListener('click', toggleModal));
 
 function toggleModal () {
@@ -188,10 +182,11 @@ function logout () {
 };
 
 
+fetchCategories();
+fetchWorks();
 logout();
 editMode();
-createFiltre();
-eventListenerFiltre();
+
 
 
 
