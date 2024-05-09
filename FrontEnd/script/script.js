@@ -3,15 +3,11 @@ const API_BASE_URL = "http://localhost:5678/api";
 const bandeaux = document.querySelector(".bandeaux");
 const logoutLink = document.querySelector("#loginLink");
 const buttonEdit = document.querySelector(".edit-actions");
-const modalContainner = document.querySelector(".modale-container");
-const modalTrigger = document.querySelectorAll(".modal-trigger");
 const galleryEdit = document.querySelector("gallery-edit"); 
 
 //fetch work
-function fetchWorksAndCategories() {
-
-    // Créer deux promesses pour les deux appels fetch
-    const worksPromise = fetch(`${API_BASE_URL}/works`)
+function fetchWorks() {
+    return fetch(`${API_BASE_URL}/works`)
         .then(response => response.json())
         .then(data => {
             displayWorks(data);
@@ -19,26 +15,31 @@ function fetchWorksAndCategories() {
             return data;
         })
         .catch(error => console.log(error));
+}
 
-    const categoriesPromise = fetch(`${API_BASE_URL}/categories`)
+function fetchCategories() {
+    return fetch(`${API_BASE_URL}/categories`)
         .then(response => response.json())
         .then(data => {
             displayCategories(data);
-            filterInput();
             return data;
         })
         .catch(error => console.log(error));
+}
 
-    // Attendre que les deux promesses soient résolues
+function fetchWorksAndCategories() {
+    const worksPromise = fetchWorks();
+    const categoriesPromise = fetchCategories();
+
     return Promise.all([worksPromise, categoriesPromise])
         .then(([worksData, categoriesData]) => {
             console.log("Works data:", worksData);
             console.log("Categories data:", categoriesData);
-
             filterInput(worksData, categoriesData);
         })
         .catch(error => console.log(error));
 }
+
 
 
 // Fonction pour créer une image avec une source donnée
@@ -100,68 +101,24 @@ function filterDataWorks(array, value) {
     };
 };
 
-//recuperer tout les element input submit dans filtre
-//j'ecoute l
 
 //fonction pour afficher la nouvelle page 
 
-function displayWorks (media) {
-    const galleryContainner = document.querySelector(".gallery");
-    // Faire une boucle pour créer les figures avec les images
-    for (let i = 0; i < media.length; i++) {
-        // Créer un élément figure pour chaque œuvre
-        const figureContainner = document.createElement("figure");
-        galleryContainner.appendChild(figureContainner);
+function displayWorks(media) {
+    const galleryContainer = document.querySelector(".gallery");
+    // Utiliser map pour itérer sur le tableau media et créer une chaîne de caractères représentant les éléments HTML
+    const htmlString = media.map(item => {
+        return `
+            <figure>
+                <img src="${item.imageUrl}" alt="${item.title}">
+                <figcaption>${item.title}</figcaption>
+            </figure>
+        `;
+    }).join(''); // Utiliser join pour concaténer les éléments HTML en une seule chaîne
 
-        // Créer et ajouter une image dans la figure
-        const image = createImage(media[i].imageUrl, media[i].title);
-        figureContainner.appendChild(image);
-
-        const titleFigcaption = document.createElement("figcaption");
-        titleFigcaption.innerText = media[i].title;
-
-        // Ajouter la figcaption à la figure
-        figureContainner.appendChild(titleFigcaption);
-    }
-};
-
-//gestion de la modale
-
-//fonction création miniature
-
-function createGalleryEdit (media) {
-
-    for (let i = 0; i < media.length; i++) {
-        // Créer un élément div
-        const cards = document.createElement("div");
-        cards.className = "gallery-card";
-
-        // Créer et ajouter l' image dans la div
-        const img = document.createElement("img");
-        img.src = media[i].imageUrl;
-        img.alt = media[i].title;
-
-        // partie bouton dans la div
-        const button = document.createElement("button");
-        const icon = document.createElement("i");
-        icon.className = "fa-solid fa-trash-can";
-        button.appendChild(icon);
-      
-        cards.appendChild(img);
-        cards.appendChild(button);
-
-        // Ajouter la div cards dans galleryEdit
-        galleryEdit?.appendChild(cards);
-    }
-};
-
-//bouton déclenchement modal
-// a changer crée des problème dans le code
-modalTrigger.forEach(trigger => trigger.addEventListener('click', toggleModal));
-
-function toggleModal () {
-    modalContainner.classList.toggle("active");
-};
+    // Utiliser innerHTML pour injecter la chaîne de caractères dans le conteneur .gallery
+    galleryContainer.innerHTML = htmlString;
+}
 
 //gestion affichage mode edit
 function editMode () {
