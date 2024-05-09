@@ -8,23 +8,34 @@ const modalTrigger = document.querySelectorAll(".modal-trigger");
 const galleryEdit = document.querySelector("gallery-edit"); 
 
 //fetch work
-function fetchWorks() {
-    fetch(`${API_BASE_URL}/works`)
+function fetchWorksAndCategories() {
+
+    // Créer deux promesses pour les deux appels fetch
+    const worksPromise = fetch(`${API_BASE_URL}/works`)
         .then(response => response.json())
         .then(data => {
             displayWorks(data);
             createGalleryEdit(data);
+            return data;
         })
         .catch(error => console.log(error));
-}
-  
-//fetch cathégorie
-function fetchCategories() {
-    fetch(`${API_BASE_URL}/categories`)
+
+    const categoriesPromise = fetch(`${API_BASE_URL}/categories`)
         .then(response => response.json())
         .then(data => {
             displayCategories(data);
-            eventListenerFiltre();
+            filterInput();
+            return data;
+        })
+        .catch(error => console.log(error));
+
+    // Attendre que les deux promesses soient résolues
+    return Promise.all([worksPromise, categoriesPromise])
+        .then(([worksData, categoriesData]) => {
+            console.log("Works data:", worksData);
+            console.log("Categories data:", categoriesData);
+
+            filterInput(worksData, categoriesData);
         })
         .catch(error => console.log(error));
 }
@@ -56,37 +67,36 @@ function displayCategories (categories) {
     }   
 }
 
-//système d event listenner personaliser
+//système d event listenner sur les input
 
-function setupEventListenerFiltre () {
-    
+function filterInput(array, value) {
     const inputFiltre = document.querySelector(".filtre")
 
     inputFiltre.addEventListener("click", function(event) {
-
         if (event.target.type === "submit") {
-          console.log(event.target.value);
+            const inputValue = event.target.value;
+            console.log(inputValue);
 
-          //optionnel
-          const galleryContainner = document.querySelector(".gallery");
-          //on supprime l ancienne page
-          galleryContainner.innerHTML = '';
-  
-        }
+            const galleryContainner = document.querySelector(".gallery");
+            //on supprime l ancienne page
+            galleryContainner.innerHTML = '';
+            const filterData = filterDataWorks(array, inputValue);
+            displayWorks(filterData);
+        };
     });
-
 };
 
 
-function teste (value, data) {
+function filterDataWorks(array, value) {
+
     if (value === "Tous") {
-        filterName = works;
-        displayWorks(filterName);
+        filterName = array;
         console.log(filterName);
-    }else {
-        const filterName = works.filter(item => item.category.name === categorieId);                        
-        displayWorks(filterName);
+        return filterName;
+    } else {
+        const filterName = array.filter(item => item.category.name === value);                        
         console.log(filterName);
+        return filterName;
     };
 };
 
@@ -181,15 +191,6 @@ function logout () {
 
 };
 
-
-fetchCategories();
-fetchWorks();
+fetchWorksAndCategories();
 logout();
 editMode();
-
-
-
-
-
-
-
