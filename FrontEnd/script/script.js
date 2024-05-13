@@ -3,7 +3,10 @@ const API_BASE_URL = "http://localhost:5678/api";
 const bandeaux = document.querySelector(".bandeaux");
 const logoutLink = document.querySelector("#loginLink");
 const buttonEdit = document.querySelector(".edit-actions");
-const galleryEdit = document.querySelector("gallery-edit"); 
+const galleryEdit = document.querySelector(".gallery-edit"); 
+
+
+import { displayModalOpen } from './modal.js';
 
 //fetch work
 function fetchWorks() {
@@ -11,11 +14,11 @@ function fetchWorks() {
         .then(response => response.json())
         .then(data => {
             displayWorks(data);
-            createGalleryEdit(data);
+            displayModalOpen(data);
             return data;
         })
         .catch(error => console.log(error));
-}
+};
 
 function fetchCategories() {
     return fetch(`${API_BASE_URL}/categories`)
@@ -25,7 +28,7 @@ function fetchCategories() {
             return data;
         })
         .catch(error => console.log(error));
-}
+};
 
 function fetchWorksAndCategories() {
     const worksPromise = fetchWorks();
@@ -38,9 +41,7 @@ function fetchWorksAndCategories() {
             filterInput(worksData, categoriesData);
         })
         .catch(error => console.log(error));
-}
-
-
+};
 
 // Fonction pour créer une image avec une source donnée
 function createImage(url, alt) {
@@ -48,7 +49,7 @@ function createImage(url, alt) {
     image.src = url;
     image.alt = alt;
     return image;
-}
+};
 
 //partie filtre
 
@@ -66,7 +67,7 @@ function displayCategories (categories) {
         filtre.appendChild(createInput)
 
     }   
-}
+};
 
 //système d event listenner sur les input
 
@@ -83,6 +84,13 @@ function filterInput(array, value) {
             galleryContainner.innerHTML = '';
             const filterData = filterDataWorks(array, inputValue);
             displayWorks(filterData);
+
+            // Supprimer la classe 'selected' de tous les éléments de type submit dans la classe 'filtre'
+            const submitInputs = document.querySelectorAll(".filtre input[type='submit']");
+            submitInputs.forEach(input => input.classList.remove('selected'));
+
+            // Ajouter la classe 'selected' à l'élément qui a déclenché l'événement click
+            event.target.classList.add('selected');
         };
     });
 };
@@ -91,7 +99,7 @@ function filterInput(array, value) {
 function filterDataWorks(array, value) {
 
     if (value === "Tous") {
-        filterName = array;
+        const filterName = array;
         console.log(filterName);
         return filterName;
     } else {
@@ -118,7 +126,7 @@ function displayWorks(media) {
 
     // Utiliser innerHTML pour injecter la chaîne de caractères dans le conteneur .gallery
     galleryContainer.innerHTML = htmlString;
-}
+};
 
 //gestion affichage mode edit
 function editMode () {

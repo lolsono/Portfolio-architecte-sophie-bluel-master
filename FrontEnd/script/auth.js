@@ -1,3 +1,4 @@
+const API_BASE_URL = "http://localhost:5678/api";
 
 const form = document.querySelector("#loginForm");
 const login = document.querySelector("#loginLink");
@@ -27,14 +28,20 @@ form.addEventListener("submit", function (event) {
 
 // Envoyer les données au serveur avec Fetch
 async function sendForm (formDataJson) {
-    const reponse = await fetch('http://localhost:5678/api/users/login', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: formDataJson
-    })
     
-    const tokenData = await reponse.json();
-    getResponse(tokenData);
+    try {
+        const reponse = await fetch(`${API_BASE_URL}/users/login`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: formDataJson
+        });
+        
+        const tokenData = await reponse.json();
+        getResponse(tokenData);
+
+    }catch (error) {
+        console.log(error);
+    }
 };
     
 //gestion réponse 
@@ -55,11 +62,3 @@ function getResponse (tokenData) {
         console.log(tokenData)
     }   
 };
-
-
-
-
-
-
-    
-

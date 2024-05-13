@@ -1,52 +1,112 @@
-const modalContainner = document.querySelector(".modale-container");
-const modalTrigger = document.querySelectorAll(".modal-trigger");
 
-//bouton déclenchement modal
-// a changer crée des problème dans le code
-modalTrigger.forEach(trigger => trigger.addEventListener('click', toggleModal));
 
-function toggleModal () {
-    modalContainner.classList.toggle("active");
+const API_BASE_URL = "http://localhost:5678/api";
+
+const modal = document.getElementById("myModal");
+const openModalBtn = document.getElementById("openModalBtn");
+const buttonClose = document.querySelector(".close");
+const galleryContainner = document.querySelector(".gallery-edit");
+
+//function ouverture de la modale
+
+export function displayModalOpen (data) {
+  
+    openModalBtn.addEventListener("click", function() {
+        modal.style.display = "block";
+        displayGalleryEdit(data);
+        buttonDelete();
+    });
 };
 
-function displayWorks(media) {
-    const galleryContainer = document.querySelector(".gallery");
-    // Utiliser map pour itérer sur le tableau media et créer une chaîne de caractères représentant les éléments HTML
+const data = displayModalOpen(data);
+
+
+function displayModalClose () {
+    buttonClose.onclick = function() {
+        modal.style.display = "none";
+      };
+      
+      window.onclick = function(event) {
+        if (event.target == modal) {
+          modal.style.display = "none";
+        };
+      };
+};
+  
+//création des vignette de suppression
+
+function displayGalleryEdit(media) {
+    const containnerEdit = document.querySelector(".gallery-edit");
+
     const htmlString = media.map(item => {
         return `
-            <figure>
-                <img src="${item.imageUrl}" alt="${item.title}">
-                <figcaption>${item.title}</figcaption>
-            </figure>
+        <div class="gallery-card">
+            <img src="${item.imageUrl}" alt="${item.title}">
+            <button id="${item.id}">
+                <i class="fa-solid fa-trash-can"></i>
+            </button>
+        </div>
         `;
-    }).join(''); // Utiliser join pour concaténer les éléments HTML en une seule chaîne
+    }).join(''); 
 
-    // Utiliser innerHTML pour injecter la chaîne de caractères dans le conteneur .gallery
-    galleryContainer.innerHTML = htmlString;
-}
-
-function createGalleryEdit (media) {
-
-    for (let i = 0; i < media.length; i++) {
-        // Créer un élément div
-        const cards = document.createElement("div");
-        cards.className = "gallery-card";
-
-        // Créer et ajouter l' image dans la div
-        const img = document.createElement("img");
-        img.src = media[i].imageUrl;
-        img.alt = media[i].title;
-
-        // partie bouton dans la div
-        const button = document.createElement("button");
-        const icon = document.createElement("i");
-        icon.className = "fa-solid fa-trash-can";
-        button.appendChild(icon);
-      
-        cards.appendChild(img);
-        cards.appendChild(button);
-
-        // Ajouter la div cards dans galleryEdit
-        galleryEdit?.appendChild(cards);
-    }
+    // Utiliser innerHTML pour injecter la chaîne de caractères 
+    containnerEdit.innerHTML = htmlString;
 };
+
+
+// gestion de la fonction delete
+function buttonDelete() {
+    const inputs = document.querySelectorAll(".gallery-card button");
+    
+    inputs.forEach(input => {
+        input.addEventListener("click", function() {
+            const idResult = this.id;
+            console.log("Input clicked: " + idResult);
+
+            const deleteData = { id: idResult };
+            const deleteDataJson = JSON.stringify(deleteData);
+            console.log(deleteDataJson);
+
+            fetchDelete(deleteDataJson, );
+        });
+    });
+};
+
+// méthode d'envoie de la demande de suppression
+export async function fetchDelete(id, data) {
+
+    const token = localStorage.getItem("token");
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/works/${id}`, {
+            method: "DELETE",
+            headers: {
+              Accept: "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+        });
+
+        
+        if (response.status === 204) {
+            console.log("La suppression a réussi.");
+            
+            //on supprime l ancienne page
+            galleryContainner.innerHTML = '';
+            displayGalleryEdit(data);
+
+
+        } else if (response.status === 401) {
+            console.log("Vous n'avez pas les permissions");
+        } else if (response.status >= 500 && response.status < 600) {
+            console.log("Erreur serveur : une erreur est survenue du côté du serveur.");
+        } else {
+            console.log("Code de statut inconnu :", response.status);
+        }
+
+    }catch (error) {
+        console.log(error);
+    };
+    
+};
+
+displayModalClose();

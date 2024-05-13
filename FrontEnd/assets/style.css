@@ -191,64 +191,34 @@ li a {
 }
 
 /*gestion de la modal*/
-.modale-container {
-	display: none;
-	position: fixed;
-	top: 0;
-	width: 100vw;
-	height: 100vh;
-}
-
-.modale-container.active {
-	display: block;
-}
-
-/*overlay fond opac*/
-.overlay {
-	z-index: 3;
-	position: absolute;
-	width: 100%;
-	height: 100%;
-	background-color: #000000;
-	opacity: 0.3;
-}
 
 .modal {
+  display: none; 
+  position: fixed; 
+  z-index: 1; 
+  left: 0;
+  top: 0;
+  width: 100%; 
+  height: 100%; 
+  overflow: auto; 
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+/* Modal Content */
+.modal-content {
+	position: relative;
+	margin: 15% auto; 
 	display: flex;
-	z-index: 4;
 	width: 55%;
 	max-width: 630px;
-	height: 85%;
-	max-height: 688px;
 	background-color: white;
 	border-radius: 10px;
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
 	flex-direction: column;
-    align-items: center;
+	align-items: center;
 }
 
-.modal h3 {
-	margin-bottom: 20px;
-	margin-top: 60px;
-	font-size: 26px;
-	font-weight: 400;
-}
-
-.modal input {
-	border: none;
-	height: 36px;
-	width: 45%!important;
-}
-
-.gallery-edit {
-	padding-bottom: 10%;
-	border-bottom: 0.2mm solid #B3B3B3;
-}
-
-.close-modal {
+/* The Close Button */
+.close {
 	background-color: transparent;
 	padding: 8px 10px;
 	border: none;
@@ -258,7 +228,38 @@ li a {
 	cursor: pointer;
 }
 
-.close-modal i {
+.close:hover,
+.close:focus {
+	color: black;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.modal-content h3 {
+	margin-bottom: 46px;
+	margin-top: 60px;
+	font-size: 26px;
+	font-weight: 400;
+}
+
+.modal-content input {
+	border: none;
+	height: 36px;
+	width: 45%!important;
+}
+
+.gallery-edit {
+	display: flex;
+    padding-bottom: 50px;
+	margin-left: 15%;
+	margin-right: 15%;
+    border-bottom: 0.2mm solid #B3B3B3;
+    flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: flex-start;
+}
+
+.close i {
 	color: black;
 }
 
@@ -267,7 +268,8 @@ li a {
 .gallery-card {
 	position: relative;
     height: 102px;
-    width: 76px;
+    width: 17%;
+	margin: 5px;
 }
 
 .gallery-card img {
@@ -278,8 +280,8 @@ li a {
 .gallery-card button {
 	border-radius: 2px;
 	display: flex;
-    left: 54px;
-    top: 5px;
+    right: 8%;
+    top: 6%;
     width: 17px;
     height: 17px;
     position: absolute;

@@ -10,21 +10,20 @@
 	<meta name="description" content="">
 	<script src="https://kit.fontawesome.com/f8c1978cd3.js" crossorigin="anonymous"></script>
 	<link rel="stylesheet" href="./assets/style.css">
-	<script src="script/script.js" defer></script>
-	<script src="script/modal.js" defer></script>
+	<script type="module" src="script/script.js" defer></script>
+	<script type="module" src="script/modal.js" defer></script>
+
 </head>
 <body>
 
-	<!-- modale -->
-	<div class="modale-container">
+	<!-- modale de suppression des images -->
 
-		<!--fermeture clique en dehor de la fenêtre pp-->
-		<div class="overlay modal-trigger">
-		</div>
+	<div id="myModal" class="modal">
 
-		<!--fenetre modale "finale" -->
-		<div class="modal">
-			<button class="close-modal modal-trigger">
+		<!-- Modal content -->
+		<div class="modal-content">
+	
+			<button class="close">
 				<i class="fa-solid fa-x"></i>
 			</button>
 			<h3>Galerie photo</h3>
@@ -32,17 +31,11 @@
 			<!--affichage gallery-->
 			<div class="gallery-edit">
 
-				<div class="gallery-card">
-					<img src="assets/images/abajour-tahina.png" alt="teste">
-					<button>
-						<i class="fa-solid fa-trash-can"></i>
-					</button>
-				</div>
-
 			</div>
 
 			<input type="submit" value="Ajouter une photo">
 		</div>
+	  
 	</div>
 
 	<div class="bandeaux">
@@ -77,7 +70,7 @@
 		<div class="containnerEdit">
 			<h2>Mes Projets</h2>
 			
-			<button class="modal-trigger edit-actions">
+			<button id="openModalBtn" class="edit-actions">
 				<i class="fa-regular fa-pen-to-square "></i>
 				<span>Modifier</span>
 			</button>
