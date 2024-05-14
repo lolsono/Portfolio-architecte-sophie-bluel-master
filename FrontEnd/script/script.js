@@ -9,12 +9,13 @@ const galleryEdit = document.querySelector(".gallery-edit");
 import { displayModalOpen } from './modal.js';
 
 //fetch work
-function fetchWorks() {
+export function fetchWorks() {
     return fetch(`${API_BASE_URL}/works`)
         .then(response => response.json())
         .then(data => {
             displayWorks(data);
             displayModalOpen(data);
+            buttonDelete(data);
             return data;
         })
         .catch(error => console.log(error));
@@ -43,18 +44,11 @@ function fetchWorksAndCategories() {
         .catch(error => console.log(error));
 };
 
-// Fonction pour créer une image avec une source donnée
-function createImage(url, alt) {
-    const image = document.createElement("img");
-    image.src = url;
-    image.alt = alt;
-    return image;
-};
 
 //partie filtre
 
 //creation des inputs filtre
-function displayCategories (categories) {
+export function displayCategories (categories) {
 
     const filtre = document.querySelector(".filtre");
     for (let i=0; i < categories.length; i++) {

@@ -1,11 +1,11 @@
-
-
 const API_BASE_URL = "http://localhost:5678/api";
 
 const modal = document.getElementById("myModal");
 const openModalBtn = document.getElementById("openModalBtn");
 const buttonClose = document.querySelector(".close");
-const galleryContainner = document.querySelector(".gallery-edit");
+const token = localStorage.getItem("token");
+
+import { fetchWorks } from './script.js';
 
 //function ouverture de la modale
 
@@ -17,8 +17,6 @@ export function displayModalOpen (data) {
         buttonDelete();
     });
 };
-
-const data = displayModalOpen(data);
 
 
 function displayModalClose () {
@@ -42,7 +40,7 @@ function displayGalleryEdit(media) {
         return `
         <div class="gallery-card">
             <img src="${item.imageUrl}" alt="${item.title}">
-            <button id="${item.id}">
+            <button  data-id="${item.id}">
                 <i class="fa-solid fa-trash-can"></i>
             </button>
         </div>
@@ -56,57 +54,62 @@ function displayGalleryEdit(media) {
 
 // gestion de la fonction delete
 function buttonDelete() {
-    const inputs = document.querySelectorAll(".gallery-card button");
-    
-    inputs.forEach(input => {
-        input.addEventListener("click", function() {
-            const idResult = this.id;
+    const galleryEditContainer = document.querySelector(".gallery-edit");
+
+    galleryEditContainer.addEventListener("click", function(event) {
+        const button = event.target.closest("button[data-id]");
+
+        if (button) {
+            const idResult = button.dataset.id;
             console.log("Input clicked: " + idResult);
-
-            const deleteData = { id: idResult };
-            const deleteDataJson = JSON.stringify(deleteData);
-            console.log(deleteDataJson);
-
-            fetchDelete(deleteDataJson, );
-        });
+            // Envoyer l'ID directement à la fonction de suppression
+            fetchDelete(idResult); 
+        }
     });
-};
+}
 
 // méthode d'envoie de la demande de suppression
-export async function fetchDelete(id, data) {
-
-    const token = localStorage.getItem("token");
-
-    try {
-        const response = await fetch(`${API_BASE_URL}/works/${id}`, {
-            method: "DELETE",
-            headers: {
-              Accept: "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-        });
-
-        
-        if (response.status === 204) {
-            console.log("La suppression a réussi.");
-            
-            //on supprime l ancienne page
-            galleryContainner.innerHTML = '';
-            displayGalleryEdit(data);
 
 
-        } else if (response.status === 401) {
-            console.log("Vous n'avez pas les permissions");
-        } else if (response.status >= 500 && response.status < 600) {
-            console.log("Erreur serveur : une erreur est survenue du côté du serveur.");
-        } else {
-            console.log("Code de statut inconnu :", response.status);
-        }
-
-    }catch (error) {
-        console.log(error);
-    };
+function fetchDelete(id) {
+    fetch(`${API_BASE_URL}/works/${id}`, {
+        method: "DELETE",
+        headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+        },
+    })
+    .then(response => {
+        handleResponse(response.status);   
+    });
     
+};
+
+//action en fonction de la reponse sur le statue de la promesse
+function handleResponse(status) {
+    if (status >= 200 && status < 300) {
+        console.log("suppression ok");
+        showModal();
+        fetchWorks().then(data => {
+            console.log(data);
+        })
+    } else if (status === 401) {
+        console.log("pas autorisé");
+    } else {
+        console.log("Comportement inattendu");
+    };
+};
+
+//rechargement de la partie affichage 
+
+function showModal() {
+    galleryContainner.innerHTML='';
+
+    fetchWorks().then(data => {
+        displayGalleryEdit(data);
+        console.log(data);
+    })
+    .catch(error => console.log(error));
 };
 
 displayModalClose();
