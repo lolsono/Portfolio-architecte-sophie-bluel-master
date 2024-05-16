@@ -6,16 +6,13 @@ const buttonEdit = document.querySelector(".edit-actions");
 const galleryEdit = document.querySelector(".gallery-edit"); 
 
 
-import { displayModalOpen } from './modal.js';
+import { displayModalOpen, buttonDelete } from './modal.js';
 
 //fetch work
 export function fetchWorks() {
     return fetch(`${API_BASE_URL}/works`)
         .then(response => response.json())
         .then(data => {
-            displayWorks(data);
-            displayModalOpen(data);
-            buttonDelete(data);
             return data;
         })
         .catch(error => console.log(error));
@@ -40,6 +37,10 @@ function fetchWorksAndCategories() {
             console.log("Works data:", worksData);
             console.log("Categories data:", categoriesData);
             filterInput(worksData, categoriesData);
+
+            displayWorks(worksData);
+            displayModalOpen(worksData);
+            buttonDelete(worksData);
         })
         .catch(error => console.log(error));
 };
@@ -132,7 +133,8 @@ function editMode () {
         logoutLink.innerText = "logout";
         logoutLink.setAttribute('href', 'index.html'); 
         buttonEdit.style.display = 'flex';
-    
+        const displayfilter = document.querySelector(".filtre");
+        displayfilter.style.display = 'none';
     }else {
         logoutLink.setAttribute('href', 'auth.html'); 
     }

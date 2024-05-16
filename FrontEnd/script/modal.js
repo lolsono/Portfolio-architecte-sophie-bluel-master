@@ -4,6 +4,7 @@ const modal = document.getElementById("myModal");
 const openModalBtn = document.getElementById("openModalBtn");
 const buttonClose = document.querySelector(".close");
 const token = localStorage.getItem("token");
+const galleryEditContainer = document.querySelector(".gallery-edit");
 
 import { fetchWorks } from './script.js';
 
@@ -34,7 +35,6 @@ function displayModalClose () {
 //création des vignette de suppression
 
 function displayGalleryEdit(media) {
-    const containnerEdit = document.querySelector(".gallery-edit");
 
     const htmlString = media.map(item => {
         return `
@@ -48,13 +48,13 @@ function displayGalleryEdit(media) {
     }).join(''); 
 
     // Utiliser innerHTML pour injecter la chaîne de caractères 
-    containnerEdit.innerHTML = htmlString;
+    galleryEditContainer .innerHTML = htmlString;
 };
 
 
 // gestion de la fonction delete
-function buttonDelete() {
-    const galleryEditContainer = document.querySelector(".gallery-edit");
+export function buttonDelete() {
+    
 
     galleryEditContainer.addEventListener("click", function(event) {
         const button = event.target.closest("button[data-id]");
@@ -90,9 +90,6 @@ function handleResponse(status) {
     if (status >= 200 && status < 300) {
         console.log("suppression ok");
         showModal();
-        fetchWorks().then(data => {
-            console.log(data);
-        })
     } else if (status === 401) {
         console.log("pas autorisé");
     } else {
@@ -103,7 +100,7 @@ function handleResponse(status) {
 //rechargement de la partie affichage 
 
 function showModal() {
-    galleryContainner.innerHTML='';
+    galleryEditContainer.innerHTML='';
 
     fetchWorks().then(data => {
         displayGalleryEdit(data);
