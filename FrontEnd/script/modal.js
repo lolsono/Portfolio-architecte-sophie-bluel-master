@@ -5,6 +5,10 @@ const openModalBtn = document.getElementById("openModalBtn");
 const buttonClose = document.querySelector(".close");
 const token = localStorage.getItem("token");
 const galleryEditContainer = document.querySelector(".gallery-edit");
+const submitInputNextView = document.querySelector("#NextView");
+const modalTitle = document.querySelector(".modal-content h3");
+const displayForm = document.querySelector(".form-Add-Porject");
+const arrowLeftReturn = document.querySelector(".return");
 
 import { fetchWorks } from './script.js';
 
@@ -109,4 +113,51 @@ function showModal() {
     .catch(error => console.log(error));
 };
 
+//gestion de la nouvelle fenêtre ajout de contenue
+
+//ecouteur d evenement du bouton 
+function nextViewModal() {
+
+    submitInputNextView.addEventListener("click", function() {
+        console.log("next view modal");
+        displayNextViewModal();
+        returnPreviousModal();
+    });
+};
+
+//fonction de retour a la modal de supression
+function returnPreviousModal () {
+    arrowLeftReturn.addEventListener("click", function() {
+        console.log("return previous modal");
+
+        //modifie h3
+        modalTitle.innerText = "Galerie photo";
+
+        //changement value du boutton
+        submitInputNextView.value = "Ajouter une photo";
+
+        galleryEditContainer.style.display = 'flex';
+        displayForm.style.display = 'none';
+        arrowLeftReturn.style.display = 'none';
+    });
+};
+
+//modification de la fenêtre
+function displayNextViewModal() {
+
+    //modifie h3
+    modalTitle.innerText = "Ajout photo";
+
+    //changement value du boutton
+    submitInputNextView.value = "Valider";
+
+    galleryEditContainer.style.display = 'none';
+    displayForm.style.display = 'flex';
+    arrowLeftReturn.style.display = 'flex';
+    
+};
+
+//récuperation des donner du formulaire 
+nextViewModal();
+//traitement des donner et envoie
 displayModalClose();
