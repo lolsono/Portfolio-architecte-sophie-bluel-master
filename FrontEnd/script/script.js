@@ -6,7 +6,7 @@ const buttonEdit = document.querySelector(".edit-actions");
 const galleryEdit = document.querySelector(".gallery-edit"); 
 
 
-import { displayModalOpen, buttonDelete } from './modal.js';
+import { displayModalOpen, buttonDelete, addSelectOptions } from './modal.js';
 
 //fetch work
 export function fetchWorks() {
@@ -36,6 +36,8 @@ function fetchWorksAndCategories() {
         .then(([worksData, categoriesData]) => {
             console.log("Works data:", worksData);
             console.log("Categories data:", categoriesData);
+
+            addSelectOptions(categoriesData);
             filterInput(worksData, categoriesData);
 
             displayWorks(worksData);
