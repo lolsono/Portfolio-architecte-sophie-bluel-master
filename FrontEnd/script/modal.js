@@ -80,7 +80,8 @@ function fetchDelete(id) {
     },
   }).then((response) => {
     handleResponse(response.status);
-  });
+  })
+  .catch(error => console.log(error));
 }
 
 //action en fonction de la reponse sur le statue de la promesse
@@ -160,81 +161,55 @@ function displayNextViewModal() {
 //géneration des propostion de cathégories dans le select
 export function addSelectOptions(data) {
   data.forEach(function (category) {
-    const option = document.createElement("option"); // créer une nouvelle variable option pour chaque élément du tableau data
-    option.value = category.name;
+    const option = document.createElement("option");
+    const selectCategory = document.querySelector("#category"); // créer une nouvelle variable option pour chaque élément du tableau data
+    option.value = category.id;
     option.textContent = category.name;
     console.log(option.textContent);
     selectCategory.appendChild(option);
   });
 }
 
-//verification du contenue du formulaire
-
-//condition pour voir sur le formulaire et bien remplie
-
-const form = document.querySelector(".form-Add-Porject");
-const formData = new FormData(form);
-
 //récuperation des tout les chant de saisie
-const inputPhoto = document.querySelector("#photo");
-const inputTitle = document.querySelector("#title");
-const selectCategory = document.querySelector("#category");
+
 
 // Gestion des champs de saisie qui ne doivent pas être vides
 function checkEmptyFields() {
-  const valeurNom = inputTitle.value;
-  const valeurCategory = selectCategory.value;
-  const valeurImage = inputPhoto.files[0];
+
+  const valeurImage = document.querySelector("#photo").files[0];
+  const valeurNom = document.querySelector("#title").value;
+  const valeurCategory = document.querySelector("#category").value;
 
   const formData = new FormData();
 
-  if (valeurNom === "") {
-    console.log("Le champ nom est vide");
-  } else {
-    console.log(valeurNom);
-    formData.append("title", valeurNom);
+  formData.append("title", valeurNom);
+  formData.append("image", valeurImage, valeurImage.name); 
+  formData.append("category", valeurCategory);
 
-    if (valeurCategory === "") {
-      console.log("Le champ catégorie est vide");
-    } else {
-      console.log(valeurCategory);
-      formData.append("category", valeurCategory);
+  console.log(valeurImage);
 
-      if (valeurImage === null) {
-        console.log("aucune image selectionée");
-      } else {
-        console.log("formulaire validé");
-
-        // Récupération de l'URL de l'image sélectionnée
-        const imageUrl = URL.createObjectURL(valeurImage);
-
-        // Ajout de l'URL de l'image à l'objet FormData
-        formData.append("imageUrl", imageUrl);
-
-        // Appel de la fonction d'envoi du formulaire
-        //fetchCreateElement(formData);
-
-        formData.forEach((value, key) => {
-          console.log(key + ": " + value);
-        });
-      }
-    }
-  }
-}
-
-// Fonction d'envoi du formulaire
-function fetchCreateElement(formData) {
-  fetch(`${API_BASE_URL}/works`, {
-    method: "POST",
-    body: formData,
-    headers: {
-      Accept: "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-  }).then((response) => {
-    console.log(response.status);
+  formData.forEach((value, key) => {
+    console.log(`${key}: ${value}`);
   });
+
+  fetch(`${API_BASE_URL}/works`, {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+    body: formData
+  })
+  .then(response => {
+    console.log(response.headers.get('Content-Type'));
+    return response.json();
+  })
+  .then(data => console.log(data))
+  .catch(error => console.error(error.message));
+
 }
+
+//actualisation de la page 
 
 //récuperation des donner du formulaire
 nextViewModal();
