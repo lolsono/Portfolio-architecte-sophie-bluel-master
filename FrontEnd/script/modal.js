@@ -78,10 +78,11 @@ function fetchDelete(id) {
       Accept: "application/json",
       Authorization: `Bearer ${token}`,
     },
-  }).then((response) => {
-    handleResponse(response.status);
   })
-  .catch(error => console.log(error));
+    .then((response) => {
+      handleResponse(response.status);
+    })
+    .catch((error) => console.log(error));
 }
 
 //action en fonction de la reponse sur le statue de la promesse
@@ -117,11 +118,13 @@ function nextViewModal() {
     //verifier si il et bien dans la modal d ajout de photo
     if (submitInputNextView.value === "Valider") {
       console.log("submit pour le formulaire");
-      //appel d'un fonction de submit du formulaire
-      checkEmptyFields();
+
+      //appel d'une fonction de verification en temp réel si le formulaire completer
     } else {
       console.log("next view modal");
       displayNextViewModal();
+
+      //debut de l ecoute du remplissement des formulaire
     }
     returnPreviousModal();
   });
@@ -172,10 +175,39 @@ export function addSelectOptions(data) {
 
 //récuperation des tout les chant de saisie
 
-
 // Gestion des champs de saisie qui ne doivent pas être vides
 function checkEmptyFields() {
+  const form = document.querySelector(".form-Add-Porject");
 
+  // Ajouter un écouteur d'événements sur le formulaire
+  form.addEventListener("input", function () {
+    const titleInput = document.querySelector("#title");
+    const categoryInput = document.querySelector("#category");
+    const photoInput = document.querySelector("#photo");
+
+    // Vérifier si tous les champs sont remplis
+    if (
+      titleInput.value.trim() !== "" &&
+      categoryInput.value.trim() !== "" &&
+      photoInput.files.length > 0
+    ) {
+      console.log("Tous les champs sont remplis");
+      // Activer le bouton de validation
+      submitInputNextView.style.backgroundColor = "#1D6154";
+
+      submitInputNextView.addEventListener("click", function () {
+        createFormData();
+      });
+    } else {
+      console.log("Un ou plusieurs champs sont vides");
+      // Désactiver le bouton de validation
+      submitInputNextView.style.backgroundColor = "#A7A7A7";
+    }
+  });
+}
+
+//fonction de creation du form data a envoyer
+function createFormData() {
   const valeurImage = document.querySelector("#photo").files[0];
   const valeurNom = document.querySelector("#title").value;
   const valeurCategory = document.querySelector("#category").value;
@@ -183,7 +215,7 @@ function checkEmptyFields() {
   const formData = new FormData();
 
   formData.append("title", valeurNom);
-  formData.append("image", valeurImage, valeurImage.name); 
+  formData.append("image", valeurImage, valeurImage.name);
   formData.append("category", valeurCategory);
 
   console.log(valeurImage);
@@ -192,26 +224,26 @@ function checkEmptyFields() {
     console.log(`${key}: ${value}`);
   });
 
-  fetch(`${API_BASE_URL}/works`, {
-    method: 'POST',
-    headers: {
-      'Accept': 'application/json',
-      'Authorization': `Bearer ${token}`
-    },
-    body: formData
-  })
-  .then(response => {
-    console.log(response.headers.get('Content-Type'));
-    return response.json();
-  })
-  .then(data => console.log(data))
-  .catch(error => console.error(error.message));
-
+  fetchNewModel(formData);
 }
 
-//actualisation de la page 
+//fonction envoie de la requete de creation
+
+function fetchNewModel(formData) {
+  fetch(`${API_BASE_URL}/works`, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: formData,
+  })
+    .then((data) => console.log(data))
+    .catch((error) => console.error(error.message));
+}
 
 //récuperation des donner du formulaire
 nextViewModal();
+checkEmptyFields();
 //traitement des donner et envoie
 displayModalClose();
