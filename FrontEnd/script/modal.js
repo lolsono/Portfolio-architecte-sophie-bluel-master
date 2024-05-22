@@ -111,14 +111,15 @@ function showModal() {
 }
 
 //gestion de la nouvelle fenêtre ajout de contenue
+const messageChampIncomplet = document.querySelector(".text-alert");
 
 //ecouteur d evenement du bouton
 function nextViewModal() {
   submitInputNextView.addEventListener("click", function () {
     //verifier si il et bien dans la modal d ajout de photo
     if (submitInputNextView.value === "Valider") {
-      console.log("submit pour le formulaire");
-
+      console.log("Un ou plusieurs champs sont vides");
+      messageChampIncomplet.style.display = "block";
       //appel d'une fonction de verification en temp réel si le formulaire completer
     } else {
       console.log("next view modal");
@@ -174,6 +175,30 @@ export function addSelectOptions(data) {
 }
 
 //récuperation des tout les chant de saisie
+const titleInput = document.querySelector("#title");
+const categoryInput = document.querySelector("#category");
+const photoInput = document.querySelector("#photo");
+
+function previousPhoto() {
+  const containnerSelectInput = document.querySelector(".select-photo");
+  const containnerPreviousPhoto = document.querySelector(".previous-image");
+  const imageSelect = document.querySelector(".previous-image img");
+
+  photoInput.addEventListener("change", function () {
+    const file = this.files[0];
+    const name = file.name;
+    const imageUrl = URL.createObjectURL(file);
+    //const url = this.file.
+    console.log("L'image sélectionnée a pour lien : ", file);
+
+    //changement du alt par le nom de l image
+    imageSelect.alt = name;
+    imageSelect.src = imageUrl;
+
+    containnerSelectInput.style.display = "none";
+    containnerPreviousPhoto.style.display = "flex";
+  });
+}
 
 // Gestion des champs de saisie qui ne doivent pas être vides
 function checkEmptyFields() {
@@ -181,10 +206,6 @@ function checkEmptyFields() {
 
   // Ajouter un écouteur d'événements sur le formulaire
   form.addEventListener("input", function () {
-    const titleInput = document.querySelector("#title");
-    const categoryInput = document.querySelector("#category");
-    const photoInput = document.querySelector("#photo");
-
     // Vérifier si tous les champs sont remplis
     if (
       titleInput.value.trim() !== "" &&
@@ -194,12 +215,12 @@ function checkEmptyFields() {
       console.log("Tous les champs sont remplis");
       // Activer le bouton de validation
       submitInputNextView.style.backgroundColor = "#1D6154";
+      messageChampIncomplet.style.display = "none";
 
       submitInputNextView.addEventListener("click", function () {
         createFormData();
       });
     } else {
-      console.log("Un ou plusieurs champs sont vides");
       // Désactiver le bouton de validation
       submitInputNextView.style.backgroundColor = "#A7A7A7";
     }
@@ -243,6 +264,7 @@ function fetchNewModel(formData) {
 }
 
 //récuperation des donner du formulaire
+previousPhoto();
 nextViewModal();
 checkEmptyFields();
 //traitement des donner et envoie

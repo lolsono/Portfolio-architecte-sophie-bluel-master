@@ -40,22 +40,28 @@
 
         <!-- affichage partie formulaire -->
         <form class="form-Add-Porject">
+          <p class="text-alert">Un ou plusieurs champs sont vides</p>
           <div class="file-input-container">
-            <i class="fa-solid fa-image"></i>
+            <div class="select-photo">
+              <i class="fa-solid fa-image"></i>
 
-            <label for="photo">
-              <i class="fa-solid fa-plus"></i>
-              Ajout photo
-            </label>
-            <p>jpg, png : 4mo max</p>
+              <label for="photo">
+                <i class="fa-solid fa-plus"></i>
+                Ajout photo
+              </label>
+              <p>jpg, png : 4mo max</p>
 
-            <input
-              type="file"
-              id="photo"
-              name="photo"
-              accept=".jpg, .png"
-              max-size="4MB"
-            />
+              <input
+                type="file"
+                id="photo"
+                name="photo"
+                accept=".jpg, .png"
+                max-size="4MB"
+              />
+            </div>
+            <div class="previous-image">
+              <img src="#" alt="#" />
+            </div>
           </div>
 
           <label for="title">Titre</label>
